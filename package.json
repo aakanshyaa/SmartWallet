@@ -1,55 +1,54 @@
 {
-  "name": "xtend",
-  "version": "4.0.2",
-  "description": "extend like a boss",
-  "keywords": [
-    "extend",
-    "merge",
-    "options",
-    "opts",
-    "object",
-    "array"
-  ],
-  "author": "Raynos <raynos2@gmail.com>",
-  "repository": "git://github.com/Raynos/xtend.git",
-  "main": "immutable",
-  "scripts": {
-    "test": "node test"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "tape": "~1.1.0"
-  },
-  "homepage": "https://github.com/Raynos/xtend",
-  "contributors": [
-    {
-      "name": "Jake Verbaten"
-    },
-    {
-      "name": "Matt Esch"
-    }
-  ],
-  "bugs": {
-    "url": "https://github.com/Raynos/xtend/issues",
-    "email": "raynos2@gmail.com"
-  },
+  "name": "archiver-utils",
+  "version": "3.0.4",
   "license": "MIT",
-  "testling": {
-    "files": "test.js",
-    "browsers": [
-      "ie/7..latest",
-      "firefox/16..latest",
-      "firefox/nightly",
-      "chrome/22..latest",
-      "chrome/canary",
-      "opera/12..latest",
-      "opera/next",
-      "safari/5.1..latest",
-      "ipad/6.0..latest",
-      "iphone/6.0..latest"
-    ]
+  "description": "utility functions for archiver",
+  "homepage": "https://github.com/archiverjs/archiver-utils#readme",
+  "author": {
+    "name": "Chris Talkington",
+    "url": "http://christalkington.com/"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/archiverjs/archiver-utils.git"
+  },
+  "bugs": {
+    "url": "https://github.com/archiverjs/archiver-utils/issues"
+  },
+  "keywords": [
+    "archiver",
+    "utils"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "file.js"
+  ],
   "engines": {
-    "node": ">=0.4"
+    "node": ">= 10"
+  },
+  "scripts": {
+    "test": "mocha --reporter dot"
+  },
+  "dependencies": {
+    "glob": "^7.2.3",
+    "graceful-fs": "^4.2.0",
+    "lazystream": "^1.0.0",
+    "lodash.defaults": "^4.2.0",
+    "lodash.difference": "^4.5.0",
+    "lodash.flatten": "^4.4.0",
+    "lodash.isplainobject": "^4.0.6",
+    "lodash.union": "^4.6.0",
+    "normalize-path": "^3.0.0",
+    "readable-stream": "^3.6.0"
+  },
+  "devDependencies": {
+    "chai": "4.3.8",
+    "mkdirp": "3.0.1",
+    "mocha": "9.2.2",
+    "rimraf": "3.0.2"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }
