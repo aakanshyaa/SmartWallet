@@ -1,0 +1,405 @@
+<div class="container">
+  <div class="dashboard-content">
+    <!-- Savings Overview Section -->
+    <div class="section-header d-flex justify-between align-center">
+      <div>
+        <h2>Savings Overview</h2>
+        <p class="text-muted">Track your savings goals and monitor your progress.</p>
+      </div>
+      <button id="addSavingBtn" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Saving Goal
+      </button>
+    </div>
+
+    <!-- Savings Trend Chart -->
+    <div class="card savings-chart-card mb-4">
+      <div class="card-header">
+        <h3 class="mb-0">Savings Progress Trend</h3>
+        <p class="text-muted">Line graph showing your savings growth over time</p>
+      </div>
+      <div class="chart-container">
+        <canvas id="savingsTrendChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Savings Progress Summary -->
+    <div class="row">
+      <% if (savings && savings.length > 0) { %>
+        <% let totalTarget = 0; let totalCurrent = 0; %>
+        <% savings.forEach(saving => { totalTarget += parseFloat(saving.target_amount); totalCurrent += parseFloat(saving.current_amount); }); %>
+        <div class="col-md-4">
+          <div class="card stat-card">
+            <div class="stat-card-body">
+              <div class="stat-card-icon bg-primary">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <div class="stat-card-content">
+                <h5>Total Savings</h5>
+                <h3>₹<%= totalCurrent.toFixed(2) %></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stat-card">
+            <div class="stat-card-body">
+              <div class="stat-card-icon bg-success">
+                <i class="fas fa-bullseye"></i>
+              </div>
+              <div class="stat-card-content">
+                <h5>Total Goals</h5>
+                <h3>₹<%= totalTarget.toFixed(2) %></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stat-card">
+            <div class="stat-card-body">
+              <div class="stat-card-icon bg-info">
+                <i class="fas fa-percentage"></i>
+              </div>
+              <div class="stat-card-content">
+                <h5>Progress</h5>
+                <h3><%= Math.round((totalCurrent / totalTarget) * 100) %>%</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="col-md-12">
+          <div class="card empty-card">
+            <div class="empty-state">
+              <i class="fas fa-piggy-bank fa-3x"></i>
+              <h3>No Savings Goals Yet</h3>
+              <p>Start tracking your savings by adding your first goal!</p>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Savings Goals Section -->
+    <div class="section-header d-flex justify-between align-center mt-4">
+      <h2>Savings Goals</h2>
+    </div>
+
+    <!-- Savings List -->
+    <div class="row">
+      <% if (savings && savings.length > 0) { %>
+        <% savings.forEach(saving => { %>
+          <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card savings-card">
+              <div class="savings-card-gradient"></div>
+              <div class="savings-icon-wrapper">
+                <div class="savings-icon">
+                  <i class="fas fa-<%= saving.icon %>"></i>
+                </div>
+              </div>
+              <div class="savings-header">
+                <h4><%= saving.name %></h4>
+                <div class="savings-actions">
+                  <a href="/savings/edit/<%= saving.id %>" class="btn-icon" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <button class="btn-icon delete-saving" data-id="<%= saving.id %>" title="Delete">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="savings-progress-container">
+                <div class="savings-progress-label">
+                  <span class="progress-percentage"><%= Math.min(Math.round((saving.current_amount / saving.target_amount) * 100), 100) %>%</span>
+                  <span class="progress-complete-text">of goal completed</span>
+                </div>
+                <div class="savings-progress">
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: <%= Math.min(Math.round((saving.current_amount / saving.target_amount) * 100), 100) %>%">
+                    </div>
+                  </div>
+                </div>
+                <div class="savings-amounts">
+                  <div class="current-amount">
+                    <span class="amount-label">Current</span>
+                    <span class="amount-value">₹<%= parseFloat(saving.current_amount).toFixed(2) %></span>
+                  </div>
+                  <div class="target-amount">
+                    <span class="amount-label">Target</span>
+                    <span class="amount-value">₹<%= parseFloat(saving.target_amount).toFixed(2) %></span>
+                  </div>
+                </div>
+              </div>
+              <div class="savings-info">
+                <div class="savings-info-item">
+                  <span><i class="far fa-calendar-alt"></i> Start Date:</span>
+                  <span><%= new Date(saving.start_date).toLocaleDateString() %></span>
+                </div>
+                <% if (saving.target_date) { %>
+                <div class="savings-info-item">
+                  <span><i class="fas fa-calendar-check"></i> Target Date:</span>
+                  <span><%= new Date(saving.target_date).toLocaleDateString() %></span>
+                </div>
+                <% } %>
+                <% if (saving.description) { %>
+                <div class="savings-info-item description-item">
+                  <span><i class="fas fa-info-circle"></i> Description:</span>
+                  <span class="description-text"><%= saving.description %></span>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <div class="col-md-12">
+          <div class="empty-state">
+            <p>No savings goals found. Add your first savings goal!</p>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Add Saving Modal -->
+<div id="addSavingModal" class="modal <%= typeof showAddModal !== 'undefined' && showAddModal ? 'show' : '' %>">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Add Saving Goal</h3>
+      <a href="/savings" class="close-modal">&times;</a>
+    </div>
+    <div class="modal-body">
+      <% if(typeof errors !== 'undefined') { %>
+        <div class="alert alert-danger">
+          <ul class="list-unstyled">
+            <% errors.forEach(error => { %>
+              <li><%= error.msg %></li>
+            <% }) %>
+          </ul>
+        </div>
+      <% } %>
+      
+      <form id="addSavingForm" action="/savings/add" method="POST">
+        <div class="form-group icon-selector">
+          <label>Select Category Icon</label>
+          <div class="selected-icon-container">
+            <div class="selected-icon">
+              <i class="fas fa-piggy-bank"></i>
+            </div>
+            <span class="icon-label">Click to select icon</span>
+          </div>
+          <div class="icon-options hidden">
+            <div class="icon-search">
+              <input type="text" placeholder="Search icons" id="iconSearch" class="form-control">
+            </div>
+            <div class="icon-categories">
+              <h4>Savings & Money</h4>
+              <div class="icon-grid">
+                <div class="icon-item" data-icon="piggy-bank" title="General Savings"><i class="fas fa-piggy-bank"></i></div>
+                <div class="icon-item" data-icon="wallet" title="Wallet"><i class="fas fa-wallet"></i></div>
+                <div class="icon-item" data-icon="coins" title="Coins"><i class="fas fa-coins"></i></div>
+                <div class="icon-item" data-icon="money-bill" title="Cash"><i class="fas fa-money-bill"></i></div>
+                <div class="icon-item" data-icon="dollar-sign" title="Money"><i class="fas fa-dollar-sign"></i></div>
+                <div class="icon-item" data-icon="landmark" title="Bank"><i class="fas fa-landmark"></i></div>
+              </div>
+              
+              <h4>Goals & Purchases</h4>
+              <div class="icon-grid">
+                <div class="icon-item" data-icon="home" title="Home/Property"><i class="fas fa-home"></i></div>
+                <div class="icon-item" data-icon="car" title="Vehicle"><i class="fas fa-car"></i></div>
+                <div class="icon-item" data-icon="graduation-cap" title="Education"><i class="fas fa-graduation-cap"></i></div>
+                <div class="icon-item" data-icon="plane" title="Travel"><i class="fas fa-plane"></i></div>
+                <div class="icon-item" data-icon="laptop" title="Electronics"><i class="fas fa-laptop"></i></div>
+                <div class="icon-item" data-icon="ring" title="Wedding"><i class="fas fa-ring"></i></div>
+              </div>
+              
+              <h4>Life & Security</h4>
+              <div class="icon-grid">
+                <div class="icon-item" data-icon="shield-alt" title="Emergency Fund"><i class="fas fa-shield-alt"></i></div>
+                <div class="icon-item" data-icon="heart" title="Health"><i class="fas fa-heart"></i></div>
+                <div class="icon-item" data-icon="gift" title="Gift"><i class="fas fa-gift"></i></div>
+                <div class="icon-item" data-icon="baby" title="Baby/Child"><i class="fas fa-baby"></i></div>
+                <div class="icon-item" data-icon="briefcase" title="Business"><i class="fas fa-briefcase"></i></div>
+                <div class="icon-item" data-icon="chart-line" title="Investments"><i class="fas fa-chart-line"></i></div>
+              </div>
+            </div>
+            <div class="no-search-results hidden">
+              <p>No icons match your search.</p>
+            </div>
+          </div>
+          <input type="hidden" name="icon" id="selectedIcon" value="piggy-bank">
+        </div>
+        
+        <div class="form-group">
+          <label for="name">Goal Name</label>
+          <input type="text" id="name" name="name" class="form-control" placeholder="Emergency Fund, New Car, etc." value="<%= typeof formData !== 'undefined' ? formData.name : '' %>" required>
+          <div class="category-suggestions" id="goalSuggestions"></div>
+        </div>
+        
+        <div class="form-row grid-2">
+          <div class="form-group">
+            <label for="target_amount">Target Amount</label>
+            <div class="input-with-icon">
+              <span class="input-icon">₹</span>
+              <input type="number" id="target_amount" name="target_amount" class="form-control" placeholder="0.00" step="0.01" min="0" value="<%= typeof formData !== 'undefined' ? formData.target_amount : '' %>" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="current_amount">Current Amount</label>
+            <div class="input-with-icon">
+              <span class="input-icon">₹</span>
+              <input type="number" id="current_amount" name="current_amount" class="form-control" placeholder="0.00" step="0.01" min="0" value="<%= typeof formData !== 'undefined' ? formData.current_amount : '0' %>">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="target_date">Target Date (Optional)</label>
+          <input type="date" id="target_date" name="target_date" class="form-control" value="<%= typeof formData !== 'undefined' && formData.target_date ? formData.target_date : '' %>">
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Description (Optional)</label>
+          <textarea id="description" name="description" class="form-control" rows="3" placeholder="Add details about your savings goal"><%= typeof formData !== 'undefined' ? formData.description : '' %></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <a href="/savings" class="btn btn-secondary cancel-btn">Cancel</a>
+          <button type="submit" class="btn btn-primary">Add Saving Goal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Include Savings JS -->
+<script src="/js/savings.js"></script>
+
+<!-- Include Savings Card CSS -->
+<link rel="stylesheet" href="/css/savings-card.css">
+
+<!-- Delete Saving Confirmation Modal -->
+<div id="deleteSavingModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Delete Saving Goal</h3>
+      <button class="close-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete this savings goal?</p>
+      <form id="deleteSavingForm" action="" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="savingId" id="deleteSavingId">
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Add this script to make the savings goal suggestions work
+document.addEventListener('DOMContentLoaded', function() {
+  // Auto-fill suggestions for common savings goals
+  const nameInput = document.getElementById('name');
+  const suggestions = document.getElementById('goalSuggestions');
+  const selectedIcon = document.querySelector('.selected-icon i');
+  const selectedIconInput = document.getElementById('selectedIcon');
+  const iconLabel = document.querySelector('.icon-label');
+  
+  if (nameInput && suggestions) {
+    // Common savings goals
+    const savingsGoals = [
+      'Emergency Fund',
+      'Home Down Payment',
+      'Car Purchase',
+      'Vacation',
+      'Education',
+      'Wedding',
+      'Retirement',
+      'Medical Expenses',
+      'Home Renovation',
+      'New Tech Gadget',
+      'Gift Fund'
+    ];
+    
+    function updateSuggestions() {
+      const input = nameInput.value.toLowerCase();
+      
+      if (input.length > 0) {
+        const filteredGoals = savingsGoals.filter(goal => 
+          goal.toLowerCase().includes(input)
+        );
+        
+        suggestions.innerHTML = '';
+        
+        if (filteredGoals.length > 0) {
+          suggestions.classList.add('show');
+          
+          filteredGoals.forEach(goal => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.textContent = goal;
+            div.addEventListener('click', () => {
+              nameInput.value = goal;
+              suggestions.classList.remove('show');
+              
+              // Also set appropriate icon based on goal
+              let iconName = 'piggy-bank';
+              
+              if (goal.toLowerCase().includes('emergency')) {
+                iconName = 'shield-alt';
+              } else if (goal.toLowerCase().includes('home')) {
+                iconName = 'home';
+              } else if (goal.toLowerCase().includes('car')) {
+                iconName = 'car';
+              } else if (goal.toLowerCase().includes('vacation') || goal.toLowerCase().includes('travel')) {
+                iconName = 'plane';
+              } else if (goal.toLowerCase().includes('education')) {
+                iconName = 'graduation-cap';
+              } else if (goal.toLowerCase().includes('wedding')) {
+                iconName = 'ring';
+              } else if (goal.toLowerCase().includes('retirement')) {
+                iconName = 'chart-line';
+              } else if (goal.toLowerCase().includes('medical')) {
+                iconName = 'heart';
+              } else if (goal.toLowerCase().includes('tech') || goal.toLowerCase().includes('gadget')) {
+                iconName = 'laptop';
+              } else if (goal.toLowerCase().includes('gift')) {
+                iconName = 'gift';
+              }
+              
+              selectedIcon.className = `fas fa-${iconName}`;
+              selectedIconInput.value = iconName;
+              
+              // Update the label text
+              if (iconLabel) {
+                const title = document.querySelector(`.icon-item[data-icon="${iconName}"]`)?.getAttribute('title');
+                iconLabel.textContent = title || iconName.charAt(0).toUpperCase() + iconName.slice(1).replace(/-/g, ' ');
+              }
+            });
+            suggestions.appendChild(div);
+          });
+        } else {
+          suggestions.classList.remove('show');
+        }
+      } else {
+        suggestions.classList.remove('show');
+      }
+    }
+    
+    nameInput.addEventListener('input', updateSuggestions);
+    nameInput.addEventListener('focus', updateSuggestions);
+    
+    // Hide suggestions when clicking elsewhere
+    document.addEventListener('click', function(e) {
+      if (e.target !== nameInput && !suggestions.contains(e.target)) {
+        suggestions.classList.remove('show');
+      }
+    });
+  }
+});
+</script> 

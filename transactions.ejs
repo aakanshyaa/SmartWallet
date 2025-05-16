@@ -1,0 +1,300 @@
+<div class="container">
+  <div class="dashboard-content">
+    <!-- Transactions Overview Section -->
+    <div class="section-header d-flex justify-between align-center">
+      <div>
+        <h2>All Transactions</h2>
+        <p class="text-muted">Review all your income and expense transactions in one place.</p>
+      </div>
+      <div class="d-flex gap-3">
+        <a href="/expense" class="btn btn-light">
+          <i class="fas fa-plus"></i> Add Expense
+        </a>
+        <a href="/income" class="btn btn-light">
+          <i class="fas fa-plus"></i> Add Income
+        </a>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <!-- Total Balance -->
+      <div class="summary-card">
+        <div class="summary-icon icon-purple">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div class="summary-info">
+          <h3>Total Balance</h3>
+          <p>₹<%= summary.balance.toFixed(2) %></p>
+        </div>
+      </div>
+      
+      <!-- Total Income -->
+      <div class="summary-card">
+        <div class="summary-icon icon-green">
+          <i class="fas fa-arrow-down"></i>
+        </div>
+        <div class="summary-info">
+          <h3>Total Income</h3>
+          <p>₹<%= summary.totalIncome.toFixed(2) %></p>
+        </div>
+      </div>
+      
+      <!-- Total Expenses -->
+      <div class="summary-card">
+        <div class="summary-icon icon-red">
+          <i class="fas fa-arrow-up"></i>
+        </div>
+        <div class="summary-info">
+          <h3>Total Expenses</h3>
+          <p>₹<%= summary.totalExpenses.toFixed(2) %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="card mt-4">
+      <div class="card-header d-flex justify-between align-center">
+        <h3>Transaction History</h3>
+        <div class="button-container">
+          <button id="filterBtn" class="action-button filter-button">
+            <i class="fas fa-filter"></i>Filter
+          </button>
+          <button id="sortBtn" class="action-button sort-button">
+            <i class="fas fa-sort"></i>Sort
+          </button>
+          
+          <!-- Filter Dropdown Content -->
+          <div id="filterOptions" class="dropdown-content hidden">
+            <div class="dropdown-header">Filter by Category</div>
+            <a href="/dashboard/transactions" class="<%= !req.query.type ? 'active' : '' %>">All Categories</a>
+            <a href="/dashboard/transactions?type=food" class="<%= req.query.type === 'food' ? 'active' : '' %>">Food & Dining</a>
+            <a href="/dashboard/transactions?type=transport" class="<%= req.query.type === 'transport' ? 'active' : '' %>">Transportation</a>
+            <a href="/dashboard/transactions?type=housing" class="<%= req.query.type === 'housing' ? 'active' : '' %>">Housing & Utilities</a>
+            <a href="/dashboard/transactions?type=health" class="<%= req.query.type === 'health' ? 'active' : '' %>">Healthcare</a>
+            <a href="/dashboard/transactions?type=entertainment" class="<%= req.query.type === 'entertainment' ? 'active' : '' %>">Entertainment</a>
+            <a href="/dashboard/transactions?type=shopping" class="<%= req.query.type === 'shopping' ? 'active' : '' %>">Shopping</a>
+            <a href="/dashboard/transactions?type=others" class="<%= req.query.type === 'others' ? 'active' : '' %>">Others</a>
+          </div>
+          
+          <!-- Sort Dropdown Content -->
+          <div id="sortOptions" class="dropdown-content hidden">
+            <div class="dropdown-header">Sort By</div>
+            <a href="/dashboard/transactions?sort=date-desc" class="<%= !req.query.sort || req.query.sort === 'date-desc' ? 'active' : '' %>">Date (Newest First)</a>
+            <a href="/dashboard/transactions?sort=date-asc" class="<%= req.query.sort === 'date-asc' ? 'active' : '' %>">Date (Oldest First)</a>
+            <a href="/dashboard/transactions?sort=amount-desc" class="<%= req.query.sort === 'amount-desc' ? 'active' : '' %>">Amount (Highest First)</a>
+            <a href="/dashboard/transactions?sort=amount-asc" class="<%= req.query.sort === 'amount-asc' ? 'active' : '' %>">Amount (Lowest First)</a>
+            <a href="/dashboard/transactions?sort=category" class="<%= req.query.sort === 'category' ? 'active' : '' %>">Category (A-Z)</a>
+          </div>
+        </div>
+      </div>
+      
+      <% if (transactions && transactions.length > 0) { %>
+        <div class="transaction-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Category/Source</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th class="text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% transactions.forEach(transaction => { %>
+                <tr class="transaction-row <%= transaction.type %>-row">
+                  <td>
+                    <div class="transaction-type-icon <%= transaction.type === 'income' ? 'income-icon' : 'expense-icon' %>">
+                      <i class="fas fa-<%= transaction.icon %>"></i>
+                    </div>
+                  </td>
+                  <td><%= transaction.name %></td>
+                  <td><%= moment(transaction.date).format('DD MMM YYYY') %></td>
+                  <td><%= transaction.description || '-' %></td>
+                  <td class="text-right <%= transaction.type === 'income' ? 'positive' : 'negative' %>">
+                    <%= transaction.type === 'income' ? '+' : '-' %>₹<%= transaction.amount.toFixed(2) %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <% if (pagination.totalPages > 1) { %>
+          <div class="pagination">
+            <% if (pagination.page > 1) { %>
+              <a href="/dashboard/transactions?page=<%= pagination.page - 1 %>" class="btn btn-secondary pagination-btn">
+                <i class="fas fa-chevron-left"></i> Previous
+              </a>
+            <% } %>
+            
+            <div class="pagination-info">
+              Page <%= pagination.page %> of <%= pagination.totalPages %>
+            </div>
+            
+            <% if (pagination.page < pagination.totalPages) { %>
+              <a href="/dashboard/transactions?page=<%= pagination.page + 1 %>" class="btn btn-secondary pagination-btn">
+                Next <i class="fas fa-chevron-right"></i>
+              </a>
+            <% } %>
+          </div>
+        <% } %>
+      <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-receipt mb-3" style="font-size: 3rem; color: var(--text-light);"></i>
+          <h3>No Transactions Found</h3>
+          <p class="text-muted">Start tracking your finances by adding income and expenses.</p>
+          <div class="d-flex gap-3 mt-4 justify-center">
+            <a href="/expense" class="btn btn-danger">Add Expense</a>
+            <a href="/income" class="btn btn-success">Add Income</a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Wait for page to fully load
+  window.onload = function() {
+    // Get elements
+    var filterBtn = document.getElementById('filterBtn');
+    var filterOptions = document.getElementById('filterOptions');
+    var sortBtn = document.getElementById('sortBtn');
+    var sortOptions = document.getElementById('sortOptions');
+    
+    console.log("Filter button found:", filterBtn !== null);
+    console.log("Sort button found:", sortBtn !== null);
+    
+    // Simple filter button click
+    filterBtn.onclick = function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Toggle filter dropdown
+      if (filterOptions.classList.contains('hidden')) {
+        filterOptions.classList.remove('hidden');
+        sortOptions.classList.add('hidden'); // Close other dropdown
+      } else {
+        filterOptions.classList.add('hidden');
+      }
+      
+      console.log("Filter button clicked");
+    };
+    
+    // Simple sort button click
+    sortBtn.onclick = function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Toggle sort dropdown
+      if (sortOptions.classList.contains('hidden')) {
+        sortOptions.classList.remove('hidden');
+        filterOptions.classList.add('hidden'); // Close other dropdown
+      } else {
+        sortOptions.classList.add('hidden');
+      }
+      
+      console.log("Sort button clicked");
+    };
+    
+    // Close dropdowns when clicking elsewhere
+    document.onclick = function(event) {
+      if (event.target !== filterBtn && !filterOptions.contains(event.target)) {
+        filterOptions.classList.add('hidden');
+      }
+      
+      if (event.target !== sortBtn && !sortOptions.contains(event.target)) {
+        sortOptions.classList.add('hidden');
+      }
+    };
+  };
+</script>
+
+<style>
+  /* Button container */
+  .button-container {
+    display: flex;
+    gap: 10px;
+    position: relative;
+  }
+  
+  /* Action button styles to match screenshot */
+  .action-button {
+    background-color: #4d7dff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .action-button i {
+    font-size: 14px;
+    margin-right: 2px;
+  }
+  
+  /* Dropdown positioning */
+  #filterOptions {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 90px;
+    z-index: 1000;
+  }
+  
+  #sortOptions {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 1000;
+  }
+  
+  /* Dropdown styling */
+  .dropdown-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 10px 0;
+    min-width: 200px;
+  }
+  
+  .dropdown-header {
+    font-weight: 600;
+    color: #333;
+    padding: 8px 15px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .dropdown-content a {
+    display: block;
+    padding: 8px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #f5f7ff;
+  }
+  
+  .dropdown-content a.active {
+    background-color: #e9efff;
+    font-weight: 500;
+    color: #4d7dff;
+  }
+  
+  /* Override any global styles that might be conflicting */
+  .dropdown-content.hidden {
+    display: none !important;
+  }
+</style> 

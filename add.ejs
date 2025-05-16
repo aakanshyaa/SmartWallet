@@ -1,0 +1,557 @@
+<%# Add New Loan Template %>
+<div class="container">
+  <div class="dashboard-content">
+    <div class="section-header d-flex justify-between align-center">
+      <div>
+        <h2>Add New Loan</h2>
+        <p class="text-muted">Track a new borrowed or lent loan</p>
+      </div>
+      <a href="/loans" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Loans
+      </a>
+    </div>
+
+    <div class="row">
+      <div class="col-md-10 mx-auto">
+        <div class="card form-card">
+          <div class="card-body">
+            <% if(typeof errors !== 'undefined'){ %>
+              <div class="alert alert-danger">
+                <ul class="mb-0">
+                  <% errors.forEach(function(error) { %>
+                    <li><%= error.msg %></li>
+                  <% }); %>
+                </ul>
+              </div>
+            <% } %>
+
+            <form action="/loans/add" method="POST" class="enhanced-form">
+              <div class="form-section">
+                <h4 class="form-section-title">Loan Type</h4>
+                <div class="form-row single-row">
+                  <div class="form-group loan-type-selector">
+                    <div class="radio-group loan-types">
+                      <label class="radio-card">
+                        <input type="radio" name="type" value="borrowed" <%= typeof formData !== 'undefined' && formData.type === 'borrowed' ? 'checked' : 'checked' %>>
+                        <div class="radio-card-content">
+                          <div class="icon-container">
+                            <i class="fas fa-hand-holding-usd"></i>
+                          </div>
+                          <span>Money I Borrowed</span>
+                        </div>
+                      </label>
+                      <label class="radio-card">
+                        <input type="radio" name="type" value="lent" <%= typeof formData !== 'undefined' && formData.type === 'lent' ? 'checked' : '' %>>
+                        <div class="radio-card-content">
+                          <div class="icon-container">
+                            <i class="fas fa-money-bill-wave"></i>
+                          </div>
+                          <span>Money I Lent</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h4 class="form-section-title">Loan Details</h4>
+                <div class="form-row grid-2">
+                  <div class="form-group icon-selector">
+                    <label>Choose Icon</label>
+                    <div class="selected-icon">
+                      <i class="fas fa-<%= typeof formData !== 'undefined' && formData.icon ? formData.icon : 'hand-holding-usd' %>"></i>
+                    </div>
+                    <div class="icon-options hidden">
+                      <div class="icon-search">
+                        <input type="text" placeholder="Search icons" id="iconSearch" class="form-control enhanced-input">
+                      </div>
+                      <div class="icon-categories">
+                        <h4>Money & Banking</h4>
+                        <div class="icon-grid">
+                          <div class="icon-item" data-icon="hand-holding-usd" title="Loan"><i class="fas fa-hand-holding-usd"></i></div>
+                          <div class="icon-item" data-icon="university" title="Bank"><i class="fas fa-university"></i></div>
+                          <div class="icon-item" data-icon="landmark" title="Financial Institution"><i class="fas fa-landmark"></i></div>
+                          <div class="icon-item" data-icon="money-bill" title="Cash"><i class="fas fa-money-bill"></i></div>
+                          <div class="icon-item" data-icon="credit-card" title="Credit Card"><i class="fas fa-credit-card"></i></div>
+                          <div class="icon-item" data-icon="piggy-bank" title="Savings"><i class="fas fa-piggy-bank"></i></div>
+                        </div>
+                        
+                        <h4>People & Relationships</h4>
+                        <div class="icon-grid">
+                          <div class="icon-item" data-icon="user-friends" title="Friends"><i class="fas fa-user-friends"></i></div>
+                          <div class="icon-item" data-icon="users" title="Group"><i class="fas fa-users"></i></div>
+                          <div class="icon-item" data-icon="user" title="Person"><i class="fas fa-user"></i></div>
+                          <div class="icon-item" data-icon="handshake" title="Agreement"><i class="fas fa-handshake"></i></div>
+                          <div class="icon-item" data-icon="heart" title="Family"><i class="fas fa-heart"></i></div>
+                          <div class="icon-item" data-icon="briefcase" title="Business"><i class="fas fa-briefcase"></i></div>
+                        </div>
+                        
+                        <h4>Purpose & Assets</h4>
+                        <div class="icon-grid">
+                          <div class="icon-item" data-icon="home" title="Home Loan"><i class="fas fa-home"></i></div>
+                          <div class="icon-item" data-icon="car" title="Vehicle Loan"><i class="fas fa-car"></i></div>
+                          <div class="icon-item" data-icon="graduation-cap" title="Education Loan"><i class="fas fa-graduation-cap"></i></div>
+                          <div class="icon-item" data-icon="building" title="Property"><i class="fas fa-building"></i></div>
+                          <div class="icon-item" data-icon="plane" title="Travel"><i class="fas fa-plane"></i></div>
+                          <div class="icon-item" data-icon="laptop" title="Electronics"><i class="fas fa-laptop"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="hidden" name="icon" id="selectedIcon" value="<%= typeof formData !== 'undefined' && formData.icon ? formData.icon : 'hand-holding-usd' %>">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="name">Loan Name / Source</label>
+                    <input type="text" id="name" name="name" class="form-control enhanced-input" placeholder="Bank, Friend's Name, etc." value="<%= typeof formData !== 'undefined' ? formData.name : '' %>" required>
+                    <div class="category-suggestions" id="loanSuggestions"></div>
+                  </div>
+                </div>
+                
+                <div class="form-row grid-2">
+                  <div class="form-group">
+                    <label for="total_amount">Total Amount</label>
+                    <div class="input-with-icon enhanced">
+                      <span class="input-icon">₹</span>
+                      <input type="number" id="total_amount" name="total_amount" class="form-control enhanced-input" placeholder="0.00" step="0.01" min="0" value="<%= typeof formData !== 'undefined' ? formData.total_amount : '' %>" required>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="remaining_amount">Remaining Amount</label>
+                    <div class="input-with-icon enhanced">
+                      <span class="input-icon">₹</span>
+                      <input type="number" id="remaining_amount" name="remaining_amount" class="form-control enhanced-input" placeholder="0.00" step="0.01" min="0" value="<%= typeof formData !== 'undefined' ? formData.remaining_amount : '' %>" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-section">
+                <h4 class="form-section-title">Additional Details</h4>
+                <div class="form-row grid-2">
+                  <div class="form-group">
+                    <label for="interest_rate">Interest Rate</label>
+                    <div class="input-with-icon enhanced input-with-icon-right">
+                      <input type="number" id="interest_rate" name="interest_rate" class="form-control enhanced-input" placeholder="0.00" step="0.01" min="0" value="<%= typeof formData !== 'undefined' ? formData.interest_rate : '' %>">
+                      <span class="input-icon">%</span>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="due_date">Due Date</label>
+                    <input type="date" id="due_date" name="due_date" class="form-control enhanced-input" value="<%= typeof formData !== 'undefined' && formData.due_date ? formData.due_date : '' %>">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea id="description" name="description" class="form-control enhanced-input" rows="3" placeholder="Add details about this loan"><%= typeof formData !== 'undefined' ? formData.description : '' %></textarea>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <a href="/loans" class="btn btn-secondary cancel-btn">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-plus-circle"></i> Add Loan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Loan type selector enhancement
+    const loanTypeRadios = document.querySelectorAll('input[name="type"]');
+    const iconSelector = document.querySelector('.icon-selector');
+    const selectedIcon = document.querySelector('.selected-icon i');
+    const selectedIconInput = document.getElementById('selectedIcon');
+    
+    // Add focus effects for enhanced inputs
+    const enhancedInputs = document.querySelectorAll('.enhanced-input');
+    if (enhancedInputs.length > 0) {
+      enhancedInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+          this.parentElement.classList.remove('focused');
+        });
+      });
+    }
+    
+    // Add click handler for icon selector
+    const iconSelectorEl = document.querySelector('.icon-selector .selected-icon');
+    const iconOptions = document.querySelector('.icon-options');
+    
+    if (iconSelectorEl && iconOptions) {
+      iconSelectorEl.addEventListener('click', function() {
+        iconOptions.classList.toggle('hidden');
+      });
+      
+      const iconItems = document.querySelectorAll('.icon-item');
+      iconItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const icon = this.getAttribute('data-icon');
+          selectedIcon.className = `fas fa-${icon}`;
+          selectedIconInput.value = icon;
+          iconOptions.classList.add('hidden');
+        });
+      });
+      
+      // Hide icon options when clicking elsewhere
+      document.addEventListener('click', function(e) {
+        if (!iconSelectorEl.contains(e.target) && !iconOptions.contains(e.target)) {
+          iconOptions.classList.add('hidden');
+        }
+      });
+    }
+    
+    loanTypeRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        // Change default icon based on loan type
+        if (this.value === 'borrowed') {
+          selectedIcon.className = 'fas fa-hand-holding-usd';
+          selectedIconInput.value = 'hand-holding-usd';
+        } else if (this.value === 'lent') {
+          selectedIcon.className = 'fas fa-money-bill-wave';
+          selectedIconInput.value = 'money-bill-wave';
+        }
+      });
+    });
+    
+    // Auto-fill suggestions for common loan sources
+    const nameInput = document.getElementById('name');
+    const suggestions = document.getElementById('loanSuggestions');
+    
+    if (nameInput && suggestions) {
+      // Common loan sources
+      const loanSources = {
+        'borrowed': ['SBI Home Loan', 'HDFC Personal Loan', 'Car Loan', 'Education Loan', 'Credit Card'],
+        'lent': ['Friend', 'Family', 'Colleague', 'Neighbor', 'Business Partner']
+      };
+      
+      function updateSuggestions() {
+        const loanType = document.querySelector('input[name="type"]:checked').value;
+        const input = nameInput.value.toLowerCase();
+        suggestions.innerHTML = '';
+        
+        if (input.length > 0) {
+          const filteredSources = loanSources[loanType].filter(source => 
+            source.toLowerCase().includes(input)
+          );
+          
+          filteredSources.forEach(source => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.textContent = source;
+            div.addEventListener('click', () => {
+              nameInput.value = source;
+              suggestions.innerHTML = '';
+              
+              // Also set appropriate icon based on source
+              let iconName = 'hand-holding-usd';
+              
+              if (source.toLowerCase().includes('home') || source.toLowerCase().includes('mortgage')) {
+                iconName = 'home';
+              } else if (source.toLowerCase().includes('car') || source.toLowerCase().includes('vehicle')) {
+                iconName = 'car';
+              } else if (source.toLowerCase().includes('education') || source.toLowerCase().includes('student')) {
+                iconName = 'graduation-cap';
+              } else if (source.toLowerCase().includes('credit card')) {
+                iconName = 'credit-card';
+              } else if (source.toLowerCase().includes('friend') || source.toLowerCase().includes('colleague')) {
+                iconName = 'user-friends';
+              } else if (source.toLowerCase().includes('family')) {
+                iconName = 'heart';
+              } else if (source.toLowerCase().includes('business')) {
+                iconName = 'briefcase';
+              }
+              
+              selectedIcon.className = `fas fa-${iconName}`;
+              selectedIconInput.value = iconName;
+            });
+            suggestions.appendChild(div);
+          });
+        }
+      }
+      
+      nameInput.addEventListener('input', updateSuggestions);
+      nameInput.addEventListener('focus', updateSuggestions);
+      
+      // Hide suggestions when clicking elsewhere
+      document.addEventListener('click', function(e) {
+        if (e.target !== nameInput && !suggestions.contains(e.target)) {
+          suggestions.innerHTML = '';
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Enhanced form styling */
+  .enhanced-form .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  .enhanced-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .enhanced-input {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.5rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .enhanced-input:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+  }
+  
+  .input-with-icon.enhanced {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    overflow: hidden;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .input-with-icon.enhanced .input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.75rem;
+    font-weight: 500;
+    color: #495057;
+    background-color: #f8f9fa;
+    border-right: 1px solid #ced4da;
+    height: 100%;
+  }
+  
+  .input-with-icon.enhanced .enhanced-input {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    flex: 1;
+  }
+  
+  .input-with-icon.enhanced:focus-within {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+  }
+  
+  .input-with-icon.enhanced.focused {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+  }
+  
+  .input-with-icon-right.enhanced .input-icon {
+    border-right: none;
+    border-left: 1px solid #ced4da;
+    order: 2;
+  }
+  
+  .input-with-icon-right.enhanced .enhanced-input {
+    order: 1;
+  }
+  
+  /* Form inputs specific styling */
+  input[type="date"].enhanced-input {
+    padding: 0.65rem 1rem;
+    height: calc(1.5em + 1.5rem + 2px);
+  }
+  
+  /* Category suggestions styling */
+  .category-suggestions {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-top: 4px;
+  }
+  
+  .suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .suggestion-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  /* Form sections styling */
+  .form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .form-section:last-child {
+    border-bottom: none;
+  }
+  
+  .form-section-title {
+    color: #333;
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+  }
+  
+  /* Radio card styling */
+  .radio-card {
+    border: 1px solid #ced4da;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .radio-card:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .radio-card input[type="radio"] {
+    display: none;
+  }
+  
+  .radio-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .radio-card .icon-container {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    color: #495057;
+    transition: all 0.2s;
+  }
+  
+  .radio-card input[type="radio"]:checked + .radio-card-content .icon-container {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .radio-card input[type="radio"]:checked + .radio-card-content {
+    font-weight: 500;
+    color: #007bff;
+  }
+  
+  .radio-card input[type="radio"]:checked + .radio-card-content + .radio-card {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+  }
+  
+  /* Icon selector styling */
+  .icon-selector .selected-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.5rem;
+    color: #495057;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .icon-selector .selected-icon:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+  }
+  
+  /* Form actions styling */
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.2);
+  }
+  
+  .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(108,117,125,0.2);
+  }
+  
+  .btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+    box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+  }
+  
+  /* Loan type selector styling */
+  .loan-types {
+    display: flex;
+    margin-bottom: 1.5rem;
+  }
+</style>

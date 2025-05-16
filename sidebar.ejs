@@ -1,0 +1,64 @@
+<!-- User Info -->
+<div class="user-info">
+  <div class="user-avatar">
+    <% if (user && user.profile_image) { %>
+      <% if (user.profile_image.startsWith('http')) { %>
+        <img src="<%= user.profile_image %>" alt="<%= user.name %>">
+      <% } else if (user.profile_image === 'default.png') { %>
+        <img src="/images/profile/default.svg" alt="<%= user.name %>">
+      <% } else { %>
+        <img src="/images/profile/<%= user.profile_image %>" alt="<%= user.name %>">
+      <% } %>
+    <% } else { %>
+      <img src="/images/profile/default.svg" alt="User">
+    <% } %>
+    <span class="user-status"></span>
+  </div>
+  <div class="user-details">
+    <% if (user && user.name) { %>
+      <h3><%= user.name %></h3>
+    <% } else { %>
+      <h3>User</h3>
+    <% } %>
+  </div>
+</div>
+
+<!-- Navigation Menu -->
+<ul class="nav-menu">
+  <li class="nav-item">
+    <a href="/dashboard" class="nav-link">
+      <i class="fas fa-home"></i>
+      <span class="nav-link-text">Dashboard</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="/income" class="nav-link">
+      <i class="fas fa-arrow-down"></i>
+      <span class="nav-link-text">Income</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="/expense" class="nav-link">
+      <i class="fas fa-arrow-up"></i>
+      <span class="nav-link-text">Expenses</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="/savings" class="nav-link">
+      <i class="fas fa-piggy-bank"></i>
+      <span class="nav-link-text">Savings</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="/profile" class="nav-link">
+      <i class="fas fa-user"></i>
+      <span class="nav-link-text">Profile</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="/settings" class="nav-link">
+      <i class="fas fa-cog"></i>
+      <span class="nav-link-text">Settings</span>
+    </a>
+  </li>
+</ul> 

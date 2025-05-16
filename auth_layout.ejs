@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Smart Wallet - Nepali Financial Tracking' %></title>
+  <!-- Favicon -->
+  <link rel="icon" href="/images/vecteezy_3d-money-holding-wallet-dollar-coin-on-isolate-background_9315283.png" type="image/png">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-container">
+    <!-- Authentication Sidebar -->
+    <div class="auth-sidebar">
+      <div class="auth-sidebar-content">
+        <div class="auth-logo">
+          <img src="/images/vecteezy_3d-money-holding-wallet-dollar-coin-on-isolate-background_9315283.png" alt="Smart Wallet Logo" class="auth-image" width="180">
+        </div>
+        
+        <h1>Smart Wallet</h1>
+        <p>Track Your Income & Expenses with ease</p>
+        
+        <div class="auth-stats">
+          <h3>Why Choose Smart Wallet?</h3>
+          <ul>
+            <li>Secure Authentication</li>
+            <li>Track Income & Expenses</li>
+            <li>Interactive Charts & Visualizations</li>
+            <li>Export Reports to Excel</li>
+            <li>Mobile Responsive Design</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Authentication Content -->
+    <div class="auth-content">
+      <!-- Flash Messages -->
+      <% if (typeof success_msg !== 'undefined' && success_msg.length > 0) { %>
+        <div class="alert alert-success">
+          <%= success_msg %>
+        </div>
+      <% } %>
+      
+      <% if (typeof error_msg !== 'undefined' && error_msg.length > 0) { %>
+        <div class="alert alert-danger">
+          <%= error_msg %>
+        </div>
+      <% } %>
+      
+      <% if (typeof error !== 'undefined' && error.length > 0) { %>
+        <div class="alert alert-danger">
+          <%= error %>
+        </div>
+      <% } %>
+      
+      <!-- Content Area -->
+      <%- body %>
+    </div>
+  </div>
+</body>
+</html> 

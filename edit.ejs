@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="dashboard-content">
+    <!-- Edit Saving Section -->
+    <div class="section-header d-flex justify-between align-center">
+      <div>
+        <h2>Edit Saving Goal</h2>
+        <p class="text-muted">Update your savings goal details or progress.</p>
+      </div>
+      <a href="/savings" class="btn btn-light">
+        <i class="fas fa-arrow-left"></i> Back to Savings
+      </a>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="card">
+      <div class="card-body">
+        <% if(typeof errors !== 'undefined') { %>
+          <div class="alert alert-danger">
+            <ul class="list-unstyled">
+              <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+              <% }) %>
+            </ul>
+          </div>
+        <% } %>
+        
+        <form action="/savings/edit/<%= saving.id %>" method="POST">
+          <div class="form-group icon-selector">
+            <label>Choose Icon</label>
+            <div class="selected-icon">
+              <i class="fas fa-<%= saving.icon %>"></i>
+            </div>
+            <div class="icon-options hidden">
+              <div class="icon-search">
+                <input type="text" placeholder="Search" id="iconSearch">
+              </div>
+              <div class="icon-categories">
+                <h4>Savings Icons</h4>
+                <div class="icon-grid">
+                  <div class="icon-item" data-icon="piggy-bank"><i class="fas fa-piggy-bank"></i></div>
+                  <div class="icon-item" data-icon="wallet"><i class="fas fa-wallet"></i></div>
+                  <div class="icon-item" data-icon="coins"><i class="fas fa-coins"></i></div>
+                  <div class="icon-item" data-icon="money-bill"><i class="fas fa-money-bill"></i></div>
+                  <div class="icon-item" data-icon="home"><i class="fas fa-home"></i></div>
+                  <div class="icon-item" data-icon="car"><i class="fas fa-car"></i></div>
+                  <div class="icon-item" data-icon="graduation-cap"><i class="fas fa-graduation-cap"></i></div>
+                  <div class="icon-item" data-icon="plane"><i class="fas fa-plane"></i></div>
+                  <div class="icon-item" data-icon="shield-alt"><i class="fas fa-shield-alt"></i></div>
+                  <div class="icon-item" data-icon="heart"><i class="fas fa-heart"></i></div>
+                  <div class="icon-item" data-icon="gift"><i class="fas fa-gift"></i></div>
+                  <div class="icon-item" data-icon="mobile-alt"><i class="fas fa-mobile-alt"></i></div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="icon" id="selectedIcon" value="<%= saving.icon %>">
+          </div>
+          
+          <div class="form-group">
+            <label for="name">Goal Name</label>
+            <input type="text" id="name" name="name" value="<%= saving.name %>" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="target_amount">Target Amount</label>
+            <input type="number" id="target_amount" name="target_amount" value="<%= saving.target_amount %>" step="0.01" min="0" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="current_amount">Current Amount</label>
+            <input type="number" id="current_amount" name="current_amount" value="<%= saving.current_amount %>" step="0.01" min="0">
+          </div>
+          
+          <div class="form-group">
+            <label for="target_date">Target Date (Optional)</label>
+            <input type="date" id="target_date" name="target_date" value="<%= saving.target_date ? saving.target_date.split('T')[0] : '' %>">
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description (Optional)</label>
+            <textarea id="description" name="description" rows="2"><%= saving.description || '' %></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <a href="/savings" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Goal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Include Savings JS -->
+<script src="/js/savings.js"></script> 

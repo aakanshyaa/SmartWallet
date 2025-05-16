@@ -1,0 +1,24 @@
+<!-- User Profile -->
+<div class="profile-card">
+  <div class="profile-avatar">
+    <% if (user && user.profile_image) { %>
+      <% if (user.profile_image.startsWith('http')) { %>
+        <img src="<%= user.profile_image %>" alt="<%= user.name %>">
+      <% } else if (user.profile_image === 'default.png') { %>
+        <img src="/images/profile/default.svg" alt="<%= user.name %>">
+      <% } else { %>
+        <img src="/images/profile/<%= user.profile_image %>" alt="<%= user.name %>">
+      <% } %>
+    <% } else { %>
+      <img src="/images/profile/default.svg" alt="User">
+    <% } %>
+    <div class="status-indicator"></div>
+  </div>
+  <div class="profile-info">
+    <% if (user && user.name) { %>
+      <h3 class="profile-name"><%= user.name %></h3>
+    <% } else { %>
+      <h3 class="profile-name">User</h3>
+    <% } %>
+  </div>
+</div> 
