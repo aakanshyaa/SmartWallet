@@ -1,44 +1,55 @@
 {
-  "name": "smart-wallet",
-  "version": "1.0.0",
-  "description": "A fully functional wallet tracking website with income, expenses, and report generation",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "setup-db": "node initialize-db.js"
-  },
+  "name": "xtend",
+  "version": "4.0.2",
+  "description": "extend like a boss",
   "keywords": [
-    "wallet",
-    "finance",
-    "expenses",
-    "income",
-    "tracking"
+    "extend",
+    "merge",
+    "options",
+    "opts",
+    "object",
+    "array"
   ],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
-    "chart.js": "^4.4.0",
-    "connect-flash": "^0.1.1",
-    "crypto": "^1.0.1",
-    "dotenv": "^16.3.1",
-    "ejs": "^3.1.9",
-    "exceljs": "^4.4.0",
-    "express": "^4.18.2",
-    "express-ejs-layouts": "^2.5.1",
-    "express-session": "^1.17.3",
-    "jsonwebtoken": "^9.0.2",
-    "method-override": "^3.0.0",
-    "moment": "^2.29.4",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^7.0.3",
-    "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0",
-    "sqlite3": "^5.1.6"
+  "author": "Raynos <raynos2@gmail.com>",
+  "repository": "git://github.com/Raynos/xtend.git",
+  "main": "immutable",
+  "scripts": {
+    "test": "node test"
   },
+  "dependencies": {},
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "tape": "~1.1.0"
+  },
+  "homepage": "https://github.com/Raynos/xtend",
+  "contributors": [
+    {
+      "name": "Jake Verbaten"
+    },
+    {
+      "name": "Matt Esch"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/Raynos/xtend/issues",
+    "email": "raynos2@gmail.com"
+  },
+  "license": "MIT",
+  "testling": {
+    "files": "test.js",
+    "browsers": [
+      "ie/7..latest",
+      "firefox/16..latest",
+      "firefox/nightly",
+      "chrome/22..latest",
+      "chrome/canary",
+      "opera/12..latest",
+      "opera/next",
+      "safari/5.1..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest"
+    ]
+  },
+  "engines": {
+    "node": ">=0.4"
   }
 }
